@@ -62,13 +62,14 @@
     </div>
     <!-- Add DISCLAIMER Here -->
     <div class="panel panel-primary">
-      <div class="alert-message">
+      <div class="panel-heading">
         <h2 class="panel-title panel-primary">
-          {{'Closeout Item' | r | xlat}}
+          {{'Made-To-Order Item Disclaimer' | r | xlat}}
         </h2>
       </div>
       <div class="panel-body">
-        <h4 class="NSGcenter">This is a Closeout Item and will not be restocked.</h4>
+        <h4 class="text-center">This is a Made-To-Order item and will ship out in 20 business days. No returns accepted for this item unless defective. Defects must be made known to Customer Service within 5 business days of receipt of order. No
+          exceptions. Any questions or concerns, don't hestiate to call Customer Service at 855.444.0847 or email us at <a href="mailto:service@nationalservicegear.org?subject=NPS%20Custom%20Item%20Inquiry">service@nationalservicegear.org</a>.</h4>
       </div>
     </div>
     <!-- End DISCLAIMER -->
@@ -104,8 +105,7 @@
         <div class="panel-body">
           <div class="alert alert-danger" ng-show="(!allowAddToOrder && !canCreateVariant && (!allowAddFromVariantList && (LineItem.Product.Variants.length == 0 || LineItem.Variant)))">
             <p>
-              <i class="fa fa-ban" />
-              {{'Your current order does not allow this product to be added to your cart' | r | xlat}}
+              <i class="fa fa-ban" /> {{'Your current order does not allow this product to be added to your cart' | r | xlat}}
             </p>
           </div>
           <!-- VARIANT LIST! -->
@@ -165,11 +165,12 @@
               </ul>
             </div>
             <div ng-show="LineItem.Product.VariantCount > settings.pageSize">
-              <pagination ng-change="paged()" ng-model="settings.currentPage" page="settings.currentPage" max-size="8" rotate="false" boundary-links="true" total-items="LineItem.Product.VariantCount" items-per-page="settings.pageSize" direction-links="true" previous-text="{{'Previous' | xlat}}" next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}" last-text="{{'Last' | xlat}}"></pagination>
+              <pagination ng-change="paged()" ng-model="settings.currentPage" page="settings.currentPage" max-size="8" rotate="false" boundary-links="true" total-items="LineItem.Product.VariantCount" items-per-page="settings.pageSize"
+                direction-links="true" previous-text="{{'Previous' | xlat}}" next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}" last-text="{{'Last' | xlat}}"></pagination>
             </div>
           </div>
           <ordertypeselector ng-show="(canAddToStandardOrder && canAddToReplenishmentOrder && !currentOrder.ID)"></ordertypeselector>
-          <!-- <addtoorderspecs ng-show="allowAddToOrder"></addtoorderspecs>
+          <addtoorderspecs ng-show="allowAddToOrder"></addtoorderspecs>
           <div class="form-group" ng-show="allowAddToOrder">
             <p ng-show="LineItem.Product.DisplayInventory && (LineItem.Variant || LineItem.Product.Variants.length == 0)">
               <span class="text-info">{{'Quantity Available' | r | xlat}}</span> {{inventoryDisplay(LineItem.Product, LineItem.Variant)}}
@@ -194,9 +195,9 @@
                 {{(LineItem.LineTotal || variantLineItemsOrderTotal) | culturecurrency}}
               </span>
             </button>
-          </div> -->
+          </div>
           <!-- For Size Matrix -->
-          <productmatrix matrixitem="LineItem"></productmatrix>
+          <!-- <productmatrix matrixitem="LineItem"></productmatrix> -->
           <!-- End Matrix -->
         </div>
       </div>

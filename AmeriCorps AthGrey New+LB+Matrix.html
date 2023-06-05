@@ -4,7 +4,6 @@
   <productnav product="LineItem.Product" variant="LineItem.Variant" />
   <!-- PRODUCT IMAGE PANEL!-->
   <div class="col-md-4 col-collapse">
-    <!-- Needed for larger size screens w/ fixed, scrollable image -->
     <div class="fixedProductImage panel panel-default hidden-xs hidden-sm" ng-controller="LightboxCtrl">
       <productlightbox></productlightbox>
     </div>
@@ -24,19 +23,22 @@
           {{LineItem.Product.Name}}
           <!-- {{LineItem.Variant.ExternalID}} -->
         </h2>
+        <!-- <h2 class="text-success" ng-show="LineItem.PriceSchedule.PriceBreaks.length == 1" ng-if="!(user.Permissions.contains('HidePricing'))">
+            {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
+        </h2> -->
       </div>
     </div>
     <!-- Add DISCLAIMER Here -->
-    <!-- <div class="panel panel-primary">
+    <div class="panel panel-primary">
       <div class="alert-message">
         <h2 class="panel-title panel-primary">
-          {{'Disclaimer' | r | xlat}}
+          {{'New Stock Item Disclaimer' | r | xlat}}
         </h2>
       </div>
       <div class="panel-body">
-        <h4 class="NSGcenter">This is a Purchase Power item and only produced and shipped once a month. Please click and <contentmodal></contentmodal> to find out when your item will ship. Contact Customer Service at 1.855.444.0847 or email us at <a href="mailto:service@nationalservicegear.org?subject=NSG%20Expedited%20Purchase%20Power%20Pricing%20Request">service@nationalservicegear.org</a> to request pricing for shipping items outside of schedule.</h4>
+        <h4 class="text-center">Due to some updates to the art, production of the {{LineItem.Product.Name}} has been pushed back a little bit. We sincerely apologize for any inconvenience. We hope to start shipping the week of November 2nd. All orders received and currently sitting on back order awaiting the {{LineItem.Product.Name}} will ship out on a first come, first serve basis. Any questions or concerns or if you need to cancel your order waiting on back order, please don't hesitate to reach out to us M-F, between the hours of 8a – 6p EST, at 855.444.0847 or email us at <a href="mailto:service@nationalservicegear.org?subject=AmeriCorps%20Item%20{{LineItem.Product.ExternalID}}%20Inquiry">service@nationalservicegear.org</a>.</h4>
       </div>
-    </div> -->
+    </div>
     <!-- End DISCLAIMER -->
     <!-- PRODUCT DESCRIPTION PANEL! --->
     <div>
@@ -67,25 +69,10 @@
             {{'Order' | r | xlat}}
           </h3>
         </div>
-        <!-- Add for Inventory Notice on Stock Items -->
-        <div class="panel-body">
-          <h4 class="text-info">
-            <strong>
-              {{'INVENTORY NOTICE' | r | xlat}}
-            </strong>
-          </h4>
-          <div class="prod-desc-list-style NSGjustify">
-            <ul>
-              <li>Please pay attention to the Quantity Available below as these amounts can change drastically during busier times. If the Quantity Available is close to zero, at zero, or below zero we may currently be out of stock. Normal stock replenishment can take 15-20 business days and to get a more accurate estimate of stock replenishment on the {{LineItem.Product.Name}} or if you have any questions on turn-around time, please contact Customer Service at 1.855.444.0847 or by email at <a href="mailto:service@nationalservicegear.org?subject={{LineItem.Product.ExternalID}}%20Stock%20Replenishment%20Request">service@nationalservicegear.org</a>. If you decide to place an order with quantities that are out of stock, your order for the {{LineItem.Product.Name}} will be placed on back order and will ship out based on first in, first out.</li>
-            </ul>
-          </div>
-        </div>
-        <!-- End Inventory Notice -->
         <div class="panel-body">
           <div class="alert alert-danger" ng-show="(!allowAddToOrder && !canCreateVariant && (!allowAddFromVariantList && (LineItem.Product.Variants.length == 0 || LineItem.Variant)))">
             <p>
-              <i class="fa fa-ban" />
-              {{'Your current order does not allow this product to be added to your cart' | r | xlat}}
+              <i class="fa fa-ban" /> {{'Your current order does not allow this product to be added to your cart' | r | xlat}}
             </p>
           </div>
           <!-- VARIANT LIST! -->
@@ -149,32 +136,6 @@
             </div>
           </div>
           <ordertypeselector ng-show="(canAddToStandardOrder && canAddToReplenishmentOrder && !currentOrder.ID)"></ordertypeselector>
-          <!-- <addtoorderspecs ng-show="allowAddToOrder"></addtoorderspecs>
-          <div class="form-group" ng-show="allowAddToOrder">
-            <p ng-show="LineItem.Product.DisplayInventory && (LineItem.Variant || LineItem.Product.Variants.length == 0)">
-              <span class="text-info">{{'Quantity Available' | r | xlat}}</span> {{inventoryDisplay(LineItem.Product, LineItem.Variant)}}
-            </p>
-            <p ng-show="LineItem.PriceSchedule.MinQuantity > 1 && !LineItem.PriceSchedule.RestrictedQuantity">
-              <span class="text-info">{{'Minimum Quantity' | r | xlat}}</span> {{LineItem.PriceSchedule.MinQuantity}}
-            </p>
-            <p ng-show="LineItem.PriceSchedule.MaxQuantity && !LineItem.PriceSchedule.RestrictedQuantity">
-              <span class="text-info">{{'Maximum Quantity' | r | xlat}}</span> {{LineItem.PriceSchedule.MaxQuantity}}
-            </p>
-            <div class="view-form-icon" ng-if="!allowAddFromVariantList">
-              <div>
-                <label ng-class="{required: !allowAddFromVariantList}" ng-hide="allowAddFromVariantList">{{('Order' | r) + ' ' + ('Quantity' | r) | xlat}}</label>
-                <quantityfield required="true" lineitem="LineItem" class="quantity" />
-              </div>
-            </div>
-            <button class="btn btn-success btn-block btn-lg" type="button" id="451_btn_orderadd" ng-click="addToOrder()">
-              <loadingindicator ng-show="addToOrderIndicator" />
-              <i ng-show="lineItemErrors.length > 0" class="fa fa-warning"></i>
-              {{addToOrderText | r | xlat}}
-              <span id="451qa_lineitem_total" class="badge" ng-if="!(user.Permissions.contains('HidePricing')) && (LineItem.LineTotal ||  variantLineItemsOrderTotal) > 0">
-                {{(LineItem.LineTotal || variantLineItemsOrderTotal) | culturecurrency}}
-              </span>
-            </button>
-          </div> -->
           <!-- For Size Matrix -->
           <productmatrix matrixitem="LineItem"></productmatrix>
           <!-- End Matrix -->

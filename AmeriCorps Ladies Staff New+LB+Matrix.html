@@ -4,38 +4,6 @@
   <productnav product="LineItem.Product" variant="LineItem.Variant" />
   <!-- PRODUCT IMAGE PANEL!-->
   <div class="col-md-4 col-collapse">
-    <!-- Remove for lightbox -->
-    <!-- <div class="panel panel-default">
-			<div class="panel-body">
-				<loadingindicator ng-show="loadingImage && LineItem.Variant.IsMpowerVariant" />
-				<figure>
-					<img id="451_img_prod_lg" class="product-image-large img-responsive" ng-src="{{LineItem.Variant.PreviewUrl || LineItem.Variant.LargeImageUrl || LineItem.Product.LargeImageUrl}}" imageonload />
-				</figure>
-				<div class="empty" ng-hide="LineItem.Variant.PreviewUrl || LineItem.Variant.LargeImageUrl || LineItem.Product.LargeImageUrl">
-					<span class="fa empty"><i class="fa fa-camera"></i></span>
-				</div>
-			</div>
-			<div class="panel-footer" ng-show="LineItem.Product.Type=='VariableText' && LineItem.Variant">
-        <span class="btn-group">
-          <button ng-if="currentOrder.Status != 'AwaitingApproval' && !EditingLineItem" class="btn btn-default" redirect="/product/{{LineItem.Product.InteropID}}/{{LineItem.Variant.InteropID}}/edit">
-            {{'Edit' | r | xlat}}
-          </button>
-          <button ng-if="currentOrder.Status == 'AwaitingApproval' || EditingLineItem" class="btn btn-default" redirect="/product/{{LineItem.Product.InteropID}}/{{LineItem.Variant.InteropID}}/{{LineItemIndex}}/{{currentOrder.ID}}/edit">
-            {{'Edit' | r | xlat}}
-          </button>
-          <button class="btn btn-default" ng-if="currentOrder.Status != 'AwaitingApproval' && !EditingLineItem" ng-click="deleteVariant(LineItem.Variant, true)">
-            {{'Remove' | r | xlat}}
-          </button>
-          <button class="btn btn-default" ng-click="getPdf(LineItem.Variant.ProofUrl)">
-            {{('View' | r) + ' ' + ('PDF' | r) | xlat}}
-          </button>
-        </span>
-			</div>
-		</div> -->
-    <!-- <div class="panel panel-default" ng-controller="LightboxCtrl">
-	        <productlightbox></productlightbox>
-	    </div> -->
-    <!-- Needed for larger size screens w/ fixed, scrollable image -->
     <div class="fixedProductImage panel panel-default hidden-xs hidden-sm" ng-controller="LightboxCtrl">
       <productlightbox></productlightbox>
     </div>
@@ -61,16 +29,19 @@
       </div>
     </div>
     <!-- Add DISCLAIMER Here -->
-    <!-- <div class="panel panel-primary">
-      <div class="panel-heading">
+    <div class="panel panel-primary">
+      <div class="alert-message">
         <h2 class="panel-title panel-primary">
-          {{'Disclaimer' | r | xlat}}
+          {{'AVAILABLE FOR PRE-ORDER - COMING SOON' | r | xlat}}
         </h2>
       </div>
       <div class="panel-body">
-        <h4 class="NSGcenter">This is a Purchase Power item and only produced and shipped once a month. Please click and <contentmodal></contentmodal> to find out when your item will ship. Contact Customer Service at 1.855.444.0847 or email us at <a href="mailto:service@nationalservicegear.org?subject=NSG%20Expedited%20Purchase%20Power%20Pricing%20Request">service@nationalservicegear.org</a> to request pricing for shipping items outside of schedule.</h4>
+        <h4 class="text-justify">The {{LineItem.Product.Name}} is a new stock item and is available for pre-order - see specifics below. Any questions or concerns, please don't hesitate to reach out to us M-F, between the hours of 8a – 6p EST, at 855.444.0847 or email us at <a href="mailto:service@nationalservicegear.org?subject=AmeriCorps%20Item%20{{LineItem.Product.ExternalID}}%20Inquiry">service@nationalservicegear.org</a>.</h4>
+        <h2 class="text-center"><strong>SPECIFICS</strong></h2>
+        <h4 class="text-center">Expected Ship Dates:</h4>
+        <h4 class="text-center"><strong>WEEK OF JULY 26th</strong></h4>
       </div>
-    </div> -->
+    </div>
     <!-- End DISCLAIMER -->
     <!-- PRODUCT DESCRIPTION PANEL! --->
     <div>
@@ -86,9 +57,6 @@
           </h4>
           <p class="prod-desc-list-style" id="451qa_prod_desc" ng-bind-html="trustedDescription(LineItem.Product)" />
           <p class="prod-desc-list-style" ng-show="LineItem.Variant.Description" ng-bind-html="trustedDescription(LineItem.Variant)" />
-          <!-- <h2 class="text-success" ng-show="LineItem.PriceSchedule.PriceBreaks.length == 1" ng-if="!(user.Permissions.contains('HidePricing'))">
-              {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
-          </h2>-->
         </div>
         <!-- PRICE SCHEDULE PANEL! --->
         <priceScheduleTable ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 1" ps='LineItem.PriceSchedule' p='LineItem.Product' />
@@ -140,7 +108,7 @@
                 <loadingindicator ng-show="searchIndicator" />
                 <li ng-repeat="v in LineItem.Product.Variants | paginate:(settings.currentPage-1) * settings.pageSize | limitTo:settings.pageSize">
                   <div class="row">
-                    <a ng-class="{'col-sm-6': allowAddFromVariantList, 'col-sm-11': !allowAddFromVariantList }" href=#/product/{{LineItem.Product.InteropID}}/{{v.InteropID}}>
+                    <a ng-class="{'col-sm-6': allowAddFromVariantList, 'col-sm-11': !allowAddFromVariantList }" href=#/product/ {{LineItem.Product.InteropID}}/ {{v.InteropID}}>
                       <h5>
                         <strong>{{v.ExternalID}}</strong>
                       </h5>
@@ -167,39 +135,12 @@
               </ul>
             </div>
             <div ng-show="LineItem.Product.VariantCount > settings.pageSize">
-              <pagination ng-change="paged()" ng-model="settings.currentPage" page="settings.currentPage" max-size="8" rotate="false" boundary-links="true" total-items="LineItem.Product.VariantCount" items-per-page="settings.pageSize" direction-links="true" previous-text="{{'Previous' | xlat}}"
-                next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}" last-text="{{'Last' | xlat}}"></pagination>
+              <pagination ng-change="paged()" ng-model="settings.currentPage" page="settings.currentPage" max-size="8" rotate="false" boundary-links="true" total-items="LineItem.Product.VariantCount" items-per-page="settings.pageSize" direction-links="true" previous-text="{{'Previous' | xlat}}" next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}" last-text="{{'Last' | xlat}}"></pagination>
             </div>
           </div>
           <ordertypeselector ng-show="(canAddToStandardOrder && canAddToReplenishmentOrder && !currentOrder.ID)"></ordertypeselector>
-          <addtoorderspecs ng-show="allowAddToOrder"></addtoorderspecs>
-          <div class="form-group" ng-show="allowAddToOrder">
-            <p ng-show="LineItem.Product.DisplayInventory && (LineItem.Variant || LineItem.Product.Variants.length == 0)">
-              <span class="text-info">{{'Quantity Available' | r | xlat}}</span> {{inventoryDisplay(LineItem.Product, LineItem.Variant)}}
-            </p>
-            <p ng-show="LineItem.PriceSchedule.MinQuantity > 1 && !LineItem.PriceSchedule.RestrictedQuantity">
-              <span class="text-info">{{'Minimum Quantity' | r | xlat}}</span> {{LineItem.PriceSchedule.MinQuantity}}
-            </p>
-            <p ng-show="LineItem.PriceSchedule.MaxQuantity && !LineItem.PriceSchedule.RestrictedQuantity">
-              <span class="text-info">{{'Maximum Quantity' | r | xlat}}</span> {{LineItem.PriceSchedule.MaxQuantity}}
-            </p>
-            <div class="view-form-icon" ng-if="!allowAddFromVariantList">
-              <div>
-                <label ng-class="{required: !allowAddFromVariantList}" ng-hide="allowAddFromVariantList">{{('Order' | r) + ' ' + ('Quantity' | r) | xlat}}</label>
-                <quantityfield required="true" lineitem="LineItem" class="quantity" />
-              </div>
-            </div>
-            <button class="btn btn-success btn-block btn-lg" type="button" id="451_btn_orderadd" ng-click="addToOrder()">
-              <loadingindicator ng-show="addToOrderIndicator" />
-              <i ng-show="lineItemErrors.length > 0" class="fa fa-warning"></i>
-              {{addToOrderText | r | xlat}}
-              <span id="451qa_lineitem_total" class="badge" ng-if="!(user.Permissions.contains('HidePricing')) && (LineItem.LineTotal ||  variantLineItemsOrderTotal) > 0">
-                {{(LineItem.LineTotal || variantLineItemsOrderTotal) | culturecurrency}}
-              </span>
-            </button>
-          </div>
           <!-- For Size Matrix -->
-          <!-- <productmatrix matrixitem="LineItem"></productmatrix> -->
+          <productmatrix matrixitem="LineItem"></productmatrix>
           <!-- End Matrix -->
         </div>
       </div>

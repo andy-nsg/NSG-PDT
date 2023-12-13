@@ -76,6 +76,22 @@
             {{'Order' | r | xlat}}
           </h3>
         </div>
+        <!-- Add for Special Instructions $ak -->
+        <div class="panel-body">
+          <h4 class="text-info">
+            <strong>
+              {{'DETAILED INSTRUCTIONS' | r | xlat}}
+            </strong>
+          </h4>
+          <div class="prod-desc-list-style text-justify">
+            <ul>
+              <li>Include the first and last name of the Scout. If you are requesting a batch of patches as a troop unit, please include all the names below, separated by a comma.</li>
+              <li>Upload your activity tracking sheet. If it is an individual, please download the individual tracking activity sheet. If it is a unit (several patches needed), please download the unit activity tracking sheet above. You can only upload one attachment here, so combine files into one PDF if needed.</li>
+              <li>Include the total number of Scouts earning the Resource Stewardship Scout Ranger award. The quantity should match the number of patches you need. Note that you may receive more than one package depending on the number of patches requested, since you will also be getting a certificate and letter of recognition. National Service Gear will determine the number and will send them to the provided address.</li>
+            </ul>
+          </div>
+        </div>
+        <!-- End Instructions Notice -->
         <div class="panel-body">
           <div class="alert alert-danger" ng-show="(!allowAddToOrder && !canCreateVariant && (!allowAddFromVariantList && (LineItem.Product.Variants.length == 0 || LineItem.Variant)))">
             <p>
@@ -157,7 +173,7 @@
             </p>
             <div class="view-form-icon" ng-if="!allowAddFromVariantList">
               <div>
-                <label ng-class="{required: !allowAddFromVariantList}" ng-hide="allowAddFromVariantList">{{('Order' | r) + ' ' + ('Quantity' | r) | xlat}}</label>
+                <label ng-class="{required: !allowAddFromVariantList}" ng-hide="allowAddFromVariantList">{{('Total number of Scouts earning the Resource Stewardship Scout Ranger award' | r) | xlat}}</label>
                 <quantityfield required="true" lineitem="LineItem" class="quantity" />
               </div>
             </div>
@@ -170,9 +186,6 @@
               </span>
             </button>
           </div>
-          <!-- For Size Matrix -->
-          <!-- <productmatrix matrixitem="LineItem"></productmatrix> -->
-          <!-- End Matrix -->
         </div>
       </div>
     </form>

@@ -70,9 +70,9 @@
     <staticspecstable ng-show="StaticSpecGroups && user.Permissions.contains('ViewNonCustomizableSpecs')" specgroups="StaticSpecGroups" length="LineItem.Product.StaticSpecLength" />
     <!-- ORDER PANEL! -->
     <form name="addToOrderForm" novalidate="">
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <div class="panel-heading" ng-if="allowAddToOrder">
-          <h3 class="panel-title">
+          <h3 class="panel-title panel-primary">
             {{'Order' | r | xlat}}
           </h3>
         </div>

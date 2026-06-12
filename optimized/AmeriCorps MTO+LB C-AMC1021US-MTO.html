@@ -110,9 +110,11 @@
 
     <!-- PRICING (Filtered by Matrix MinQty/MaxQty) -->
     <div class="bento-cell bento-pricing bento-full-width"
-        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 1">
+        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 0">
       <h2 class="section-header blue">
-        <i class="fa fa-tags" aria-hidden="true"></i> {{'Volume Pricing' | r | xlat}}
+        <i class="fa fa-tags" aria-hidden="true"></i>
+        <span ng-if="LineItem.PriceSchedule.PriceBreaks.length > 1">{{'Volume Pricing' | r | xlat}}</span>
+        <span ng-if="LineItem.PriceSchedule.PriceBreaks.length == 1">{{'Pricing' | r | xlat}}</span>
       </h2>
       <div class="pricing-grid">
         <div ng-repeat="break in LineItem.PriceSchedule.PriceBreaks" class="price-tier"

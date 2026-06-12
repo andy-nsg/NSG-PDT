@@ -50,6 +50,24 @@
         </div>
       </div>
 
+      <!-- COMPACT PRICE BADGE -->
+      <div class="bento-cell bento-price-badge"
+        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 0"
+        role="region" aria-labelledby="price-badge-heading">
+        <p id="price-badge-heading" style="margin: 0 0 4px 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #888;">
+          <span ng-if="!(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) && LineItem.PriceSchedule.PriceBreaks.length == 1">{{'Unit Price' | r | xlat}}</span>
+          <span ng-if="(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) || LineItem.PriceSchedule.PriceBreaks.length > 1">{{'Starting From' | r | xlat}}</span>
+        </p>
+        <p style="margin: 0; font-size: 28px; font-weight: 800; color: #3c763d; line-height: 1.1;">
+          {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
+        </p>
+        <p style="margin: 6px 0 0; font-size: 12px; color: #777; line-height: 1.4;">
+          <span ng-if="!(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) && LineItem.PriceSchedule.PriceBreaks.length == 1">{{'per unit' | r | xlat}}</span>
+          <span ng-if="!(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) && LineItem.PriceSchedule.PriceBreaks.length > 1">{{'per unit — see volume pricing below' | r | xlat}}</span>
+          <span ng-if="LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0">{{'per unit · prices may vary by size' | r | xlat}}</span>
+        </p>
+      </div>
+
       <!-- STATIC SPECS -->
       <div class="bento-cell bento-specs" ng-show="StaticSpecGroups && user.Permissions.contains('ViewNonCustomizableSpecs')">
         <h2 class="section-header green">
@@ -99,9 +117,11 @@
 
     <!-- PRICING (Filtered by Matrix MinQty/MaxQty) -->
     <div class="bento-cell bento-pricing bento-full-width"
-        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 1">
+        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 0">
       <h2 class="section-header blue">
-        <i class="fa fa-tags" aria-hidden="true"></i> {{'Volume Pricing' | r | xlat}}
+        <i class="fa fa-tags" aria-hidden="true"></i>
+        <span ng-if="LineItem.PriceSchedule.PriceBreaks.length > 1">{{'Volume Pricing' | r | xlat}}</span>
+        <span ng-if="LineItem.PriceSchedule.PriceBreaks.length == 1">{{'Pricing' | r | xlat}}</span>
       </h2>
       <div class="pricing-grid">
         <div ng-repeat="break in LineItem.PriceSchedule.PriceBreaks" class="price-tier"

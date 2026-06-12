@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <!-- RIGHT COLUMN: HEADER + MTO + SPECS -->
+    <!-- RIGHT COLUMN: HEADER + INVENTORY + SPECS -->
     <div class="bento-right-grid">
 
       <!-- PRODUCT HEADER -->
@@ -33,30 +33,34 @@
         </header>
       </div>
 
-      <!-- MTO DISCLOSURE -->
-      <div class="bento-cell bento-alert" role="region" aria-labelledby="mto-heading">
+      <!-- INVENTORY NOTICE (Simplified - works for all product types) -->
+      <div class="bento-cell bento-alert" role="region" aria-labelledby="inv-heading">
         <div style="display: flex; align-items: flex-start; gap: 16px;">
-          <div class="alert-icon">
-            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+          <div class="alert-icon" style="background: #5cb85c;">
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
           </div>
           <div style="flex: 1;">
-            <h2 id="mto-heading" style="margin: 0 0 12px 0; font-weight: 700; color: #856404; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px;">
-              {{'Made-To-Order Item Disclosure' | r | xlat}}
+            <h2 id="inv-heading" style="margin: 0 0 8px 0; font-weight: 700; color: #3c763d; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px;">
+              {{'In Stock & Ready to Ship' | r | xlat}}
             </h2>
-            <p style="margin: 0 0 16px 0; color: #856404; line-height: 1.6; font-size: 14px;">
-              The {{LineItem.Product.Name}} is part of our Made-To-Order (MTO) program and is not stocked. Questions? Contact us M-F, 8a – 4:30p EST at <strong>855.444.0847</strong> or <a href="mailto:service@nationalservicegear.org?subject=AmeriCorps%20Item%20{{LineItem.Product.ExternalID}}%20Inquiry" style="color: #856404; font-weight: 600; text-decoration: underline;">service@nationalservicegear.org</a>.
+            <!-- Matrix items (sizes/specs) -->
+            <p ng-if="LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0"
+              style="margin: 0 0 12px 0; color: #444; line-height: 1.6; font-size: 14px;">
+              {{'Select your size below to check real-time availability' | r | xlat}}.
+              {{'Most orders ship within 2-3 business days' | r | xlat}}.
             </p>
-            <div class="lead-time-box">
-              <div class="time-highlight">
-                <p class="time-label">Lead Time</p>
-                <p class="time-value">10-15 Business Days</p>
-              </div>
-              <div>
-                <p style="margin: 0 0 8px 0; font-size: 13px; color: #856404; font-weight: 600;">How it's calculated:</p>
-                <ul style="margin: 0; padding-left: 18px; color: #856404; font-size: 13px; line-height: 1.5;">
-                  <li><strong>New Orders:</strong> Begins at final art approval</li>
-                  <li><strong>Re-Orders:</strong> Begins at purchase date</li>
-                </ul>
+            <!-- Standard items (no matrix) -->
+            <p ng-if="!LineItem.Product.IsVBOSS && (LineItem.Product.Specs | filter:{DefinesVariant:true}).length == 0"
+              style="margin: 0 0 12px 0; color: #444; line-height: 1.6; font-size: 14px;">
+              {{'In stock and ready for immediate shipment' | r | xlat}}.
+              {{'Orders ship within 2-3 business days' | r | xlat}}.
+            </p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <div style="background: rgba(92, 184, 92, 0.1); border-radius: 8px; padding: 12px 16px; border: 1px solid rgba(92, 184, 92, 0.3);">
+                <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">{{'Processing Time' | r | xlat}}</div>
+                <div style="font-size: 16px; font-weight: 700; color: #3c763d;">
+                  <i class="fa-regular fa-clock" aria-hidden="true"></i> {{'2-3 Business Days' | r | xlat}}
+                </div>
               </div>
             </div>
           </div>
@@ -92,7 +96,6 @@
       aria-expanded="{{showSpecsSizing ? 'true' : 'false'}}"
       aria-label="Specifications and Sizing Information"
       ng-if="LineItem.Product.StaticSpecGroups && LineItem.Product.StaticSpecGroups.Sizing && LineItem.Product.StaticSpecGroups.Sizing.Specs && LineItem.Product.StaticSpecGroups.Sizing.Specs.SizeChart && LineItem.Product.StaticSpecGroups.Sizing.Specs.SizeChart.Value">
-
       <div class="collapsible-header-content">
         <h2 class="section-header purple">
           <i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>
@@ -106,10 +109,7 @@
           <i class="fa toggle-icon" ng-class="showSpecsSizing ? 'fa-chevron-up' : 'fa-chevron-down'" aria-hidden="true"></i>
         </div>
       </div>
-
-      <div ng-show="showSpecsSizing"
-        ng-click="$event.stopPropagation()"
-        class="collapsible-content">
+      <div ng-show="showSpecsSizing" ng-click="$event.stopPropagation()" class="collapsible-content">
         <div ng-include="'partials/SizeCharts/' + LineItem.Product.StaticSpecGroups.Sizing.Specs.SizeChart.Value + '.html'"></div>
       </div>
     </div>
@@ -121,26 +121,21 @@
         <i class="fa fa-tags" aria-hidden="true"></i> {{'Volume Pricing' | r | xlat}}
       </h2>
       <div class="pricing-grid">
-        <div ng-repeat="break in LineItem.PriceSchedule.PriceBreaks"
-            class="price-tier"
-            ng-if="(!LineItem.Product.StaticSpecGroups || !LineItem.Product.StaticSpecGroups.Matrix || !LineItem.Product.StaticSpecGroups.Matrix.Specs || !LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty || break.Quantity >= (LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty.Value * 1)) && (!LineItem.Product.StaticSpecGroups || !LineItem.Product.StaticSpecGroups.Matrix || !LineItem.Product.StaticSpecGroups.Matrix.Specs || !LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty || break.Quantity <= (LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value * 1))">
-
+        <div ng-repeat="break in LineItem.PriceSchedule.PriceBreaks" class="price-tier"
+          ng-if="(!LineItem.Product.StaticSpecGroups || !LineItem.Product.StaticSpecGroups.Matrix || !LineItem.Product.StaticSpecGroups.Matrix.Specs || !LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty || break.Quantity >= (LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty.Value * 1)) && (!LineItem.Product.StaticSpecGroups || !LineItem.Product.StaticSpecGroups.Matrix || !LineItem.Product.StaticSpecGroups.Matrix.Specs || !LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty || break.Quantity <= (LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value * 1))">
           <div style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">{{'Qty' | r | xlat}}</div>
-
           <div style="font-size: 20px; font-weight: 800; color: #31708f; margin-bottom: 8px;">
             <!-- Calculate max qty for range display -->
             <span ng-init="nextBreak = LineItem.PriceSchedule.PriceBreaks[$index+1]"></span>
             {{break.Quantity}}<span ng-if="nextBreak && (!LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty || nextBreak.Quantity <= LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value)" style="font-size: 14px; color: #999;">-{{nextBreak.Quantity - 1}}</span><span ng-if="!nextBreak || (LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty && nextBreak.Quantity > LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value)" style="font-size: 14px; color: #999;">+</span>
           </div>
-
           <div style="font-size: 18px; font-weight: 700; color: #3c763d;">{{break.Price | culturecurrency}}</div>
           <div style="font-size: 11px; color: #666; margin-top: 4px;">{{'per unit' | r | xlat}}</div>
         </div>
       </div>
-
-      <!-- Show Min/Max constraint notice if Matrix specs exist -->
+      <!-- Matrix Constraint Notice -->
       <div class="alert alert-info" style="margin-top: 20px; border-radius: 8px;"
-          ng-if="LineItem.Product.StaticSpecGroups && LineItem.Product.StaticSpecGroups.Matrix && LineItem.Product.StaticSpecGroups.Matrix.Specs && (LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty || LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty)">
+        ng-if="LineItem.Product.StaticSpecGroups && LineItem.Product.StaticSpecGroups.Matrix && LineItem.Product.StaticSpecGroups.Matrix.Specs && (LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty || LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty)">
         <i class="fa fa-info-circle" aria-hidden="true"></i>
         <strong>{{'Order Constraints' | r | xlat}}:</strong>
         <span ng-if="LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty && LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty">
@@ -160,16 +155,15 @@
       <h2 class="section-header orange">
         <i class="fa fa-shopping-cart" aria-hidden="true"></i> {{'Order Options' | r | xlat}}
       </h2>
-
       <form name="addToOrderForm" novalidate="" aria-label="Add to Order Form">
-
-        <div class="alert alert-danger" role="alert" aria-live="assertive" ng-show="(!allowAddToOrder && !canCreateVariant && (!allowAddFromVariantList && (LineItem.Product.Variants.length == 0 || LineItem.Variant)))" style="border-radius: 12px; margin-bottom: 20px;">
+        <div class="alert alert-danger" role="alert" aria-live="assertive"
+          ng-show="(!allowAddToOrder && !canCreateVariant && (!allowAddFromVariantList && (LineItem.Product.Variants.length == 0 || LineItem.Variant)))"
+          style="border-radius: 12px; margin-bottom: 20px;">
           <p style="margin: 0;">
             <i class="fa fa-ban" aria-hidden="true"></i>
             {{'Your current order does not allow this product to be added to your cart' | r | xlat}}
           </p>
         </div>
-
         <!-- VARIANT LIST -->
         <div ng-if="!LineItem.Variant && LineItem.Product.Variants.length > 0">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #f0f0f0;">
@@ -180,7 +174,6 @@
               <i class="fa fa-plus" aria-hidden="true"></i> {{'Create New' | r | xlat}}
             </button>
           </div>
-
           <div class="view-form-icon variant-search" ng-if="LineItem.Product.VariantCount > settings.pageSize || searchTerm" style="margin-bottom: 20px;">
             <div class="input-group">
               <label for="variantSearchInput" class="sr-only">{{'Search variants' | r | xlat}}</label>
@@ -193,30 +186,25 @@
               </div>
             </div>
           </div>
-
           <div class="variants-bento">
             <div ng-repeat="v in LineItem.Product.Variants | paginate:(settings.currentPage-1) * settings.pageSize | limitTo:settings.pageSize"
-                class="variant-card"
-                ng-class="{'selected': variantLineItems[v.InteropID].Quantity > 0}"
-                ng-click="selectVariant(v)">
-
+              class="variant-card"
+              ng-class="{'selected': variantLineItems[v.InteropID].Quantity > 0}"
+              ng-click="selectVariant(v)">
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                 <h4>{{v.ExternalID}}</h4>
                 <button type="button" ng-show="v.IsMpowerVariant" ng-click="deleteVariant(v, false); $event.stopPropagation();" class="btn btn-xs btn-link" style="color: #d9534f; padding: 0;" aria-label="{{'Delete Variant' | r | xlat}}">
                   <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
                 </button>
               </div>
-
               <div ng-show="v.Description" ng-bind-html="trustedDescription(v)" class="variant-description"></div>
-
               <div class="variant-footer">
                 <div ng-show="LineItem.Product.DisplayInventory && LineItem.Product.IsVariantLevelInventory"
-                    class="availability-badge"
-                    ng-class="v.QuantityAvailable > 0 ? 'in-stock' : 'out-of-stock'">
+                  class="availability-badge"
+                  ng-class="v.QuantityAvailable > 0 ? 'in-stock' : 'out-of-stock'">
                   <i class="fa" ng-class="v.QuantityAvailable > 0 ? 'fa-check-circle' : 'fa-times-circle'" aria-hidden="true"></i>
                   {{v.QuantityAvailable}} {{'available' | r | xlat}}
                 </div>
-
                 <div ng-show="allowAddFromVariantList" style="display: flex; align-items: center; gap: 12px;">
                   <div ng-show="variantLineItems[v.InteropID].LineTotal > 0" class="variant-total">
                     <div class="label">{{'Total' | r | xlat}}</div>
@@ -227,16 +215,36 @@
               </div>
             </div>
           </div>
-
           <div ng-show="LineItem.Product.VariantCount > settings.pageSize" style="margin-top: 24px;">
             <pagination ng-change="paged()" ng-model="settings.currentPage" page="settings.currentPage" max-size="8" rotate="false" boundary-links="true" total-items="LineItem.Product.VariantCount" items-per-page="settings.pageSize" direction-links="true" previous-text="{{'Previous' | xlat}}" next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}" last-text="{{'Last' | xlat}}"></pagination>
           </div>
         </div>
-
         <ordertypeselector ng-show="(canAddToStandardOrder && canAddToReplenishmentOrder && !currentOrder.ID)"></ordertypeselector>
-
-        <div class="matrix-container" style="margin-top: 24px;">
-          <productmatrix matrixitem="LineItem"></productmatrix>
+        <addtoorderspecs ng-show="allowAddToOrder"></addtoorderspecs>
+        <div class="form-group" ng-show="allowAddToOrder">
+          <p ng-show="LineItem.Product.DisplayInventory && (LineItem.Variant || LineItem.Product.Variants.length == 0)">
+            <span class="text-info">{{'Quantity Available' | r | xlat}}</span> {{inventoryDisplay(LineItem.Product, LineItem.Variant)}}
+          </p>
+          <p ng-show="LineItem.PriceSchedule.MinQuantity > 1 && !LineItem.PriceSchedule.RestrictedQuantity">
+            <span class="text-info">{{'Minimum Quantity' | r | xlat}}</span> {{LineItem.PriceSchedule.MinQuantity}}
+          </p>
+          <p ng-show="LineItem.PriceSchedule.MaxQuantity && !LineItem.PriceSchedule.RestrictedQuantity">
+            <span class="text-info">{{'Maximum Quantity' | r | xlat}}</span> {{LineItem.PriceSchedule.MaxQuantity}}
+          </p>
+          <div class="view-form-icon" ng-if="!allowAddFromVariantList">
+            <div>
+              <label ng-class="{required: !allowAddFromVariantList}" ng-hide="allowAddFromVariantList">{{('Order' | r) + ' ' + ('Quantity' | r) | xlat}}</label>
+              <quantityfield required="true" lineitem="LineItem" class="quantity" />
+            </div>
+          </div>
+          <button class="btn btn-success btn-block btn-lg" type="button" id="451_btn_orderadd" ng-click="addToOrder()">
+            <loadingindicator ng-show="addToOrderIndicator" />
+            <i ng-show="lineItemErrors.length > 0" class="fa fa-warning" aria-hidden="true"></i>
+            {{addToOrderText | r | xlat}}
+            <span id="451qa_lineitem_total" class="badge" ng-if="!(user.Permissions.contains('HidePricing')) && (LineItem.LineTotal || variantLineItemsOrderTotal) > 0">
+              {{(LineItem.LineTotal || variantLineItemsOrderTotal) | culturecurrency}}
+            </span>
+          </button>
         </div>
       </form>
     </div>

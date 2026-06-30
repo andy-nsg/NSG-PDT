@@ -70,22 +70,34 @@
         </div>
       </div>
 
-      <!-- COMPACT PRICE BADGE -->
-      <div class="bento-cell bento-price-badge"
-        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 0"
-        role="region" aria-labelledby="price-badge-heading">
-        <p id="price-badge-heading" style="margin: 0 0 4px 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #888;">
-          <span ng-if="!(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) && LineItem.PriceSchedule.PriceBreaks.length == 1">{{'Unit Price' | r | xlat}}</span>
-          <span ng-if="(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) || LineItem.PriceSchedule.PriceBreaks.length > 1">{{'Starting From' | r | xlat}}</span>
-        </p>
-        <p style="margin: 0; font-size: 28px; font-weight: 800; color: #3c763d; line-height: 1.1;">
-          {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
-        </p>
-        <p style="margin: 6px 0 0; font-size: 12px; color: #777; line-height: 1.4;">
-          <span ng-if="!(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) && LineItem.PriceSchedule.PriceBreaks.length == 1">{{'per unit' | r | xlat}}</span>
-          <span ng-if="!(LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0) && LineItem.PriceSchedule.PriceBreaks.length > 1">{{'per unit — see volume pricing below' | r | xlat}}</span>
-          <span ng-if="LineItem.Product.IsVBOSS || (LineItem.Product.Specs | filter:{DefinesVariant:true}).length > 0">{{'per unit · prices may vary by size' | r | xlat}}</span>
-        </p>
+      <!-- BADGE ROW: Price + Made in USA -->
+      <div class="bento-badge-row">
+
+        <!-- COMPACT PRICE BADGE -->
+        <div class="bento-cell bento-price-badge"
+          ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 0"
+          role="region" aria-label="Item Price">
+          <p style="margin: 0; font-size: 28px; font-weight: 800; color: #3c763d; line-height: 1.1;">
+            {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
+          </p>
+          <p style="margin: 6px 0 0; font-size: 12px; color: #777; line-height: 1.4;">
+            {{'per unit · prices may vary by size' | r | xlat}}
+          </p>
+        </div>
+
+        <!-- MADE IN USA BADGE -->
+        <div class="bento-cell bento-usa-badge" role="region" aria-label="Made in the U.S.A."
+          ng-if="LineItem.Product.ExternalID &&
+                 LineItem.Product.ExternalID.split('-')[1] &&
+                 LineItem.Product.ExternalID.split('-')[1].slice(-2) == 'US'">
+          <div class="usa-stars-bar" aria-hidden="true">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+          <div class="usa-badge-inner">
+            <span class="usa-badge-made-in">{{'Made in the' | r | xlat}}</span>
+            <span class="usa-badge-country">{{'U.S.A.' | r | xlat}}</span>
+          </div>
+          <div class="usa-red-stripe" aria-hidden="true"></div>
+        </div>
+
       </div>
 
       <!-- STATIC SPECS -->
@@ -136,48 +148,6 @@
         ng-click="$event.stopPropagation()"
         class="collapsible-content">
         <div ng-include="'partials/SizeCharts/' + LineItem.Product.StaticSpecGroups.Sizing.Specs.SizeChart.Value + '.html'"></div>
-      </div>
-    </div>
-
-    <!-- PRICING (Filtered by Matrix MinQty/MaxQty) -->
-    <div class="bento-cell bento-pricing bento-full-width"
-        ng-if="!(user.Permissions.contains('HidePricing')) && LineItem.PriceSchedule.PriceBreaks.length > 0">
-      <h2 class="section-header blue">
-        <i class="fa fa-tags" aria-hidden="true"></i>
-        <span ng-if="LineItem.PriceSchedule.PriceBreaks.length > 1">{{'Volume Pricing' | r | xlat}}</span>
-        <span ng-if="LineItem.PriceSchedule.PriceBreaks.length == 1">{{'Pricing' | r | xlat}}</span>
-      </h2>
-      <div class="pricing-grid">
-        <div ng-repeat="break in LineItem.PriceSchedule.PriceBreaks"
-          class="price-tier"
-          ng-if="(!LineItem.Product.StaticSpecGroups || !LineItem.Product.StaticSpecGroups.Matrix || !LineItem.Product.StaticSpecGroups.Matrix.Specs || !LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty || break.Quantity >= (LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty.Value * 1)) && (!LineItem.Product.StaticSpecGroups || !LineItem.Product.StaticSpecGroups.Matrix || !LineItem.Product.StaticSpecGroups.Matrix.Specs || !LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty || break.Quantity <= (LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value * 1))">
-
-          <div style="font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">{{'Qty' | r | xlat}}</div>
-
-          <div style="font-size: 20px; font-weight: 800; color: #31708f; margin-bottom: 8px;">
-            <span ng-init="nextBreak = LineItem.PriceSchedule.PriceBreaks[$index+1]"></span>
-            {{break.Quantity}}<span ng-if="nextBreak && (!LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty || nextBreak.Quantity <= LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value)" style="font-size: 14px; color: #999;">-{{nextBreak.Quantity - 1}}</span><span ng-if="!nextBreak || (LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty && nextBreak.Quantity > LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value)" style="font-size: 14px; color: #999;">+</span>
-          </div>
-
-          <div style="font-size: 18px; font-weight: 700; color: #3c763d;">{{break.Price | culturecurrency}}</div>
-          <div style="font-size: 11px; color: #666; margin-top: 4px;">{{'per unit' | r | xlat}}</div>
-        </div>
-      </div>
-
-      <!-- Matrix Constraint Notice -->
-      <div class="alert alert-info" style="margin-top: 20px; border-radius: 8px;"
-        ng-if="LineItem.Product.StaticSpecGroups && LineItem.Product.StaticSpecGroups.Matrix && LineItem.Product.StaticSpecGroups.Matrix.Specs && (LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty || LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty)">
-        <i class="fa fa-info-circle" aria-hidden="true"></i>
-        <strong>{{'Order Constraints' | r | xlat}}:</strong>
-        <span ng-if="LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty && LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty">
-          {{'Minimum order' | r | xlat}} {{LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty.Value}}, {{'maximum' | r | xlat}} {{LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value}}
-        </span>
-        <span ng-if="LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty && !LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty">
-          {{'Minimum order quantity' | r | xlat}}: {{LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty.Value}}
-        </span>
-        <span ng-if="!LineItem.Product.StaticSpecGroups.Matrix.Specs.MinQty && LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty">
-          {{'Maximum order quantity' | r | xlat}}: {{LineItem.Product.StaticSpecGroups.Matrix.Specs.MaxQty.Value}}
-        </span>
       </div>
     </div>
 

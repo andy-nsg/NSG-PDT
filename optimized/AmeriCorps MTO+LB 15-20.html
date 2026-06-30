@@ -63,6 +63,19 @@
         </div>
       </div>
 
+      <!-- MADE IN USA BADGE -->
+      <div class="bento-cell bento-usa-badge" role="region" aria-label="Made in the U.S.A."
+        ng-if="LineItem.Product.ExternalID &&
+               LineItem.Product.ExternalID.split('-')[1] &&
+               LineItem.Product.ExternalID.split('-')[1].slice(-2) == 'US'">
+        <div class="usa-stars-bar" aria-hidden="true">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+        <div class="usa-badge-inner">
+          <span class="usa-badge-made-in">{{'Made in the' | r | xlat}}</span>
+          <span class="usa-badge-country">{{'U.S.A.' | r | xlat}}</span>
+        </div>
+        <div class="usa-red-stripe" aria-hidden="true"></div>
+      </div>
+
       <!-- STATIC SPECS -->
       <div class="bento-cell bento-specs" ng-show="StaticSpecGroups && user.Permissions.contains('ViewNonCustomizableSpecs')">
         <h2 class="section-header green">

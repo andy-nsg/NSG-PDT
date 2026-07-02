@@ -8,7 +8,7 @@
   <!-- BENTO GRID CONTAINER -->
   <div class="bento-container">
 
-    <!-- LEFT COLUMN: IMAGE (Sticky) -->
+    <!-- LEFT COLUMN: IMAGE -->
     <div class="bento-cell bento-image">
       <div class="panel panel-default" ng-controller="LightboxCtrl" role="region" aria-label="Product Image Gallery">
         <div class="panel-body">
@@ -147,7 +147,10 @@
 
     <!-- SPECS AND SIZING (Collapsible) - ONLY IF SIZING SPEC EXISTS -->
     <div class="bento-cell bento-sizechart bento-full-width collapsible-box"
-      ng-click="showSpecsSizing = !showSpecsSizing"
+      ng-click="toggleSpecsSizing($event)"
+      ng-keydown="toggleSpecsSizing($event)"
+      role="button"
+      tabindex="0"
       aria-expanded="{{showSpecsSizing ? 'true' : 'false'}}"
       aria-label="Specifications and Sizing Information"
       ng-if="LineItem.Product.StaticSpecGroups && LineItem.Product.StaticSpecGroups.Sizing && LineItem.Product.StaticSpecGroups.Sizing.Specs && LineItem.Product.StaticSpecGroups.Sizing.Specs.SizeChart && LineItem.Product.StaticSpecGroups.Sizing.Specs.SizeChart.Value">

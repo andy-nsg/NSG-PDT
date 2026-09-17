@@ -37,7 +37,7 @@
       <div class="bento-cell bento-alert" role="region" aria-labelledby="program-heading">
         <div style="display: flex; align-items: flex-start; gap: 16px;">
           <div class="alert-icon" style="background: #d39a2e;"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
-          <div style="flex: 1;"><h2 id="program-heading" style="margin: 0 0 8px 0; font-weight: 700; color: #856404; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px;">{{'Out of Stock' | r | xlat}}</h2><p style="margin: 0; color: #856404; line-height: 1.6; font-size: 14px;">This item is currently out of stock. Please check the product description for replenishment information or contact Customer Service at 855.444.0847.</p></div>
+          <div style="flex: 1;"><h2 id="program-heading" style="margin: 0 0 8px 0; font-weight: 700; color: #856404; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px;">{{'Out of Stock' | r | xlat}}</h2><p style="margin: 0; color: #856404; line-height: 1.6; font-size: 14px;">This item is currently out of stock. Please check the product description for replenishment information or contact Customer Service at 855.444.0847 or <a href="mailto:service@nationalservicegear.org?subject={{LineItem.Product.Name}}%20Out%20of%20Stock%20Inquiry" style="color: #856404; text-decoration: underline;">service@nationalservicegear.org</a>.</p></div>
         </div>
       </div>
 
@@ -53,8 +53,6 @@
           </div>
           <div class="usa-red-stripe" aria-hidden="true"></div>
         </div>
-
-      </div>
 
       <!-- STATIC SPECS -->
       <div class="bento-cell bento-specs" ng-show="StaticSpecGroups && user.Permissions.contains('ViewNonCustomizableSpecs')">

@@ -58,12 +58,10 @@
               {{'Orders ship within 2-3 business days' | r | xlat}}.
             </p>
 
-            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-              <div style="background: rgba(92, 184, 92, 0.1); border-radius: 8px; padding: 12px 16px; border: 1px solid rgba(92, 184, 92, 0.3);">
-                <div style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">{{'Processing Time' | r | xlat}}</div>
-                <div style="font-size: 16px; font-weight: 700; color: #3c763d;">
-                  <i class="fa-regular fa-clock" aria-hidden="true"></i> {{'2-3 Business Days' | r | xlat}}
-                </div>
+            <div class="lead-time-box stock-lead-time-box processing-time-box">
+              <div class="time-highlight">
+                <p class="time-label">{{'Processing Time' | r | xlat}}</p>
+                <p class="time-value"><i class="fa-regular fa-clock" aria-hidden="true"></i> {{'2-3 Business Days' | r | xlat}}</p>
               </div>
             </div>
           </div>
